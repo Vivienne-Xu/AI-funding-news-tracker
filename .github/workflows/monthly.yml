@@ -1,0 +1,70 @@
+name: Monthly report
+
+on:
+  schedule:
+    - cron: "0 18 28-31 * *"   # 18:00 UTC on days 28-31; the first step only continues on the real last day of the month
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to build, as YYYY-MM (leave empty for the current month)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash             # a failure anywhere in a piped command fails the step
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+  EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+jobs:
+  monthly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Is today the last day of the month?
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u -d tomorrow +%d)" = "01" ]; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "Not the last day of the month. Nothing to do."
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'true'
+      - uses: astral-sh/setup-uv@v5
+        if: steps.gate.outputs.go == 'true'
+      - name: Install
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          uv sync --frozen
+          uv run playwright install --with-deps chromium
+      - name: Load saved data
+        id: restore
+        if: steps.gate.outputs.go == 'true'
+        run: bash scripts/ci_restore_data.sh
+      - name: Build and send the monthly report
+        if: steps.gate.outputs.go == 'true'
+        env:
+          MONTH: ${{ inputs.month }}
+        run: |
+          mkdir -p out
+          uv run app monthly ${MONTH:+--month "$MONTH"} 2>&1 | tee out/run.log
+      - name: Save data
+        if: always() && steps.gate.outputs.go == 'true' && steps.restore.outcome == 'success'
+        run: bash scripts/ci_save_data.sh
+      - name: Email a failure notice
+        if: failure()
+        run: uv run app alert --job monthly --link "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --log out/run.log

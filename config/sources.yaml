@@ -1,0 +1,25 @@
+# News sources. Each entry: name, type (rss | html_list | edgar), url, tier (1-3), region, enabled.
+# needs_ai_match: true for general tech/startup feeds, so only items that mention AI are kept.
+# Phase 2 supports type "rss" only. More sources are added once the collectors work.
+#
+# Known gaps (checked 2026-10-08):
+#   Tech in Asia: blocks automated visitors (HTTP 403), not used.
+#   KrASIA, CTech: no working feed address found.
+#   VentureBeat: rate-limits automated visitors (HTTP 429), not used for now.
+sources:
+  # --- US ---
+  - {name: TechCrunch AI,    type: rss, url: "https://techcrunch.com/category/artificial-intelligence/feed/", tier: 1, region: US, enabled: true}
+  - {name: SiliconANGLE AI,  type: rss, url: "https://siliconangle.com/category/ai/feed/", tier: 2, region: US, enabled: true}
+  - {name: Crunchbase News,  type: rss, url: "https://news.crunchbase.com/feed/", tier: 1, region: US, enabled: true, needs_ai_match: true}
+  # --- Europe ---
+  - {name: Sifted,           type: rss, url: "https://sifted.eu/feed", tier: 1, region: Europe, enabled: true, needs_ai_match: true}
+  - {name: Tech.eu,          type: rss, url: "https://tech.eu/feed/", tier: 2, region: Europe, enabled: false, needs_ai_match: true}  # robots.txt forbids fetching
+  - {name: EU-Startups,      type: rss, url: "https://www.eu-startups.com/feed/", tier: 2, region: Europe, enabled: true, needs_ai_match: true}
+  - {name: UKTN,             type: rss, url: "https://www.uktech.news/feed", tier: 2, region: Europe, enabled: true, needs_ai_match: true}
+  # --- Asia ---
+  - {name: e27,              type: rss, url: "https://e27.co/feed/", tier: 2, region: Asia, enabled: true, needs_ai_match: true}
+  - {name: Inc42,            type: rss, url: "https://inc42.com/feed/", tier: 2, region: Asia, enabled: true, needs_ai_match: true}
+  - {name: YourStory,        type: rss, url: "https://yourstory.com/feed", tier: 3, region: Asia, enabled: true, needs_ai_match: true}
+  # --- Rest of world ---
+  - {name: BetaKit,          type: rss, url: "https://betakit.com/feed/", tier: 2, region: RoW, enabled: true, needs_ai_match: true, bare_dollar: CAD}  # BetaKit writes "USD" when it means US dollars; a plain $ is Canadian
+  - {name: Wamda,            type: rss, url: "https://www.wamda.com/feed", tier: 2, region: RoW, enabled: true, needs_ai_match: true}

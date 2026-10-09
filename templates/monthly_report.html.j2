@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Funding Monthly · {{ i.month_label }}</title>
+<style>{{ css }}</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body class="m-body">
+<div class="m-wrap">
+
+<div class="m-cover">
+  <div class="m-issue">AI Funding Monthly &middot; Issue {{ issue }}</div>
+  <div class="m-title">{{ i.month_label }}</div>
+  <div class="m-cover-grid">
+    <div>
+      <div class="m-hero-label">Total raised</div>
+      <div class="m-hero">{{ i.total_usd|usd }}</div>
+      {% if i.mom_change_pct is not none %}
+      <div class="m-delta {{ 'm-up' if i.mom_change_pct >= 0 else 'm-down' }}">{{ '▲' if i.mom_change_pct >= 0 else '▼' }} {{ i.mom_change_pct|abs }}% vs {{ prev_label }}</div>
+      {% else %}
+      <div class="m-delta" style="color:#7A8594;">No previous month to compare</div>
+      {% endif %}
+    </div>
+    <div class="m-insight">{{ n.headline }}</div>
+  </div>
+  <div class="m-kpis">
+    <div class="m-kpi"><div class="m-kpi-value">{{ i.median_round_usd|usd if i.median_round_usd else '–' }}</div><div class="m-kpi-label">Median round</div></div>
+    <div class="m-kpi"><div class="m-kpi-value">{{ (i.top5_share_pct ~ '%') if i.top5_share_pct is not none else '–' }}</div><div class="m-kpi-label">Top-5 share of capital</div></div>
+    <div class="m-kpi"><div class="m-kpi-value">{{ i.mega_rounds }}</div><div class="m-kpi-label">Rounds of $100M+</div></div>
+    <div class="m-kpi"><div class="m-kpi-value">{{ i.new_unicorns }}</div><div class="m-kpi-label">New unicorns</div></div>
+  </div>
+</div>
+
+<ul class="m-takeaways">{% for t in n.takeaways %}<li>{{ t }}</li>{% endfor %}</ul>
+{% if i.history_months < 12 %}<div class="m-banner">{{ i.history_months }} month{{ '' if i.history_months == 1 else 's' }} of data so far. Trends and comparisons build up as history grows.</div>{% endif %}
+
+<div class="m-section">
+  <div class="m-section-no">01 &middot; Stack layers</div>
+  <h2>{{ n.section_headlines.layers }}</h2>
+  {% if n.section_notes.layers %}<p class="m-note">{{ n.section_notes.layers }}</p>{% endif %}
+  <div id="card-layers">
+    <div class="m-chart"><canvas id="chart-layers"></canvas></div>
+    <div class="m-legend" id="legend-layers"></div>
+  </div>
+  <p class="m-fine">Share of capital by layer, all deals vs. excluding the two largest rounds. Layers: Models, Infrastructure, Tooling, Applications, Physical AI.</p>
+</div>
+
+<div class="m-section">
+  <div class="m-section-no">02 &middot; Global view</div>
+  <h2>{{ n.section_headlines['global'] }}</h2>
+  {% if n.section_notes['global'] %}<p class="m-note">{{ n.section_notes['global'] }}</p>{% endif %}
+  <div id="card-global">
+    <div class="m-chart"><canvas id="chart-global"></canvas></div>
+    <div class="m-legend" id="legend-global"></div>
+  </div>
+  <p class="m-fine">Capital raised by region, by month. {{ i.region_trend|length }} month{{ '' if i.region_trend|length == 1 else 's' }} of data shown{% if i.region_trend|length < 12 %}; the 12-month view fills in over time{% endif %}.</p>
+  <div class="m-cards">
+    {% for r in i.regions if r.region != 'RoW' %}
+    <div class="m-card">
+      <div class="m-section-no"><span class="m-dot" style="background: {{ colour(r.region) }};"></span>{{ r.region }}</div>
+      <div class="m-card-value">{{ r.usd|usd if r.usd else '–' }}</div>
+      <div>{{ r.count }} deal{{ '' if r.count == 1 else 's' }} &middot; {{ r.pct }}% of capital{% if r.shift_pts is not none %} ({{ '%+g'|format(r.shift_pts) }} pts){% endif %}</div>
+      <div>{% if r.largest_company %}Largest: <b>{{ r.largest_company }}</b> {{ r.largest_usd|usd }}{% else %}No disclosed amounts{% endif %}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="m-section">
+  <div class="m-section-no">03 &middot; Stage mix and investors</div>
+  <h2>{{ n.section_headlines.stage }}</h2>
+  {% if n.section_notes.stage %}<p class="m-note">{{ n.section_notes.stage }}</p>{% endif %}
+  <div class="m-grid">
+    <div>
+      <div class="m-chart m-chart-tall"><canvas id="chart-stage"></canvas></div>
+      <div class="m-legend" id="legend-stage"></div>
+    </div>
+    <div>
+      <div class="m-section-no">Most active investors</div>
+      <div class="m-bars">
+      {% for inv in i.top_investors %}
+        <div class="m-bar-row"><div class="m-bar-name">{{ inv.name }}</div>
+          <div class="m-bar-track"><div class="m-bar-fill" style="width: {{ (inv.deals / i.top_investors[0].deals * 100)|round|int }}%;"></div></div>
+          <div class="m-bar-val">{{ inv.deals }} deal{{ '' if inv.deals == 1 else 's' }}{% if inv.led_usd %} &middot; {{ inv.led_usd|usd }} led{% endif %}</div></div>
+      {% else %}<p class="m-fine">No investors named this month.</p>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="m-section">
+  <div class="m-section-no">04 &middot; Largest rounds</div>
+  <h2>{{ n.section_headlines.rounds }}</h2>
+  {% if n.section_notes.rounds %}<p class="m-note">{{ n.section_notes.rounds }}</p>{% endif %}
+  <table class="m-table">
+    <tr><th>Company</th><th>What it does</th><th>Layer</th><th>Region</th><th>Round</th><th class="num">Raised</th><th class="num">Valuation</th></tr>
+    {% for d in i.largest_rounds %}
+    <tr><td>{{ d.company }}</td><td class="m-desc">{{ d.description or '–' }}</td><td>{{ d.layer }}</td><td><span class="m-dot" style="background: {{ colour(d.region) }};"></span>{{ d.region }}</td><td>{{ d.round }}</td>
+        <td class="num">{{ d.usd|usd }}</td><td class="num">{{ d.valuation_usd|usd if d.valuation_usd else '–' }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% if i.headwinds %}
+<div class="m-section">
+  <div class="m-section-no">05 &middot; Headwinds</div>
+  <h2>{{ n.section_headlines.headwinds }}</h2>
+  {% if n.section_notes.headwinds %}<p class="m-note">{{ n.section_notes.headwinds }}</p>{% endif %}
+  <div class="m-headwinds">
+  <table class="m-table">
+    <tr><th>Type</th><th>Company</th><th>Region</th><th>Date</th><th>What happened</th><th class="num">Prior funding</th><th>Source</th></tr>
+    {% for h in i.headwinds %}
+    <tr><td>{{ h.type }}</td><td>{{ h.company }}</td><td>{{ h.region }}</td><td>{{ h.date }}</td><td>{{ h.summary }}</td>
+        <td class="num">{{ h.prior_funding_usd|usd if h.prior_funding_usd else '–' }}</td>
+        <td>{% if h.url %}<a href="{{ h.url }}">{{ h.source }}</a>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+  </div>
+  {% if i.headwind_prior_avg is not none %}
+  <p class="m-fine">Average per month over the previous six months: {% for k, v in i.headwind_prior_avg.items() %}{{ k }} {{ '%.1f'|format(v) }}{% if not loop.last %}, {% endif %}{% else %}no headwind events recorded{% endfor %}.</p>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="m-section no-print">
+  <div class="m-section-no">{{ '06' if i.headwinds else '05' }} &middot; All deals</div>
+  <h2>Every deal of the month</h2>
+  <div class="m-filters">
+    <input id="f-search" type="search" placeholder="Search company or investor">
+    <select id="f-region"><option value="">All regions</option>{% for r in ['US','Europe','Asia','RoW'] %}<option>{{ r }}</option>{% endfor %}</select>
+    <select id="f-layer"><option value="">All layers</option>{% for l in i.layers %}<option>{{ l.layer }}</option>{% endfor %}</select>
+    <select id="f-stage"><option value="">All stages</option>{% for s in i.stages %}<option>{{ s.stage }}</option>{% endfor %}</select>
+  </div>
+  <table class="m-table" id="deal-table">
+    <tr><th>Company</th><th>Layer</th><th>Region</th><th>Round</th><th>Led by</th><th>Date</th><th class="num">Raised</th></tr>
+    {% for d in i.deals %}
+    <tr data-region="{{ d.region }}" data-layer="{{ d.layer }}" data-stage="{{ d.round }}" data-text="{{ (d.company ~ ' ' ~ d.investors)|lower }}">
+      <td>{% if d.url %}<a href="{{ d.url }}">{{ d.company }}</a>{% else %}{{ d.company }}{% endif %}</td><td>{{ d.layer }}</td><td>{{ d.region }}</td><td>{{ d.round }}</td>
+      <td>{{ d.investors }}</td><td>{{ d.date }}</td><td class="num">{{ d.usd|usd if d.usd else 'undisclosed' }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="m-footer">
+  <b>Methodology.</b> Deals come from public news feeds ({{ sources_note }}). Every figure is computed from the stored deals; items that failed a check are excluded.
+  Amounts are shown in US dollars; other currencies are converted at fixed approximate rates unless the article states its own dollar figure.
+  "New unicorns" counts companies whose first tracked valuation reached $1B this month. Commentary: {{ narrative_note }}.
+  Coverage is limited to what the sources publish, so the report is not a complete census of the market.
+  AI cost for this report: {{ cost_text }} (paid-plan estimate).
+</div>
+
+</div>
+<script>{{ charts_js }}</script>
+<script>
+var DATA = {{ data|tojson }};
+renderCharts(DATA);
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll("#deal-table tr[data-region]"));
+  var ids = ["f-search", "f-region", "f-layer", "f-stage"];
+  function apply() {
+    var q = document.getElementById("f-search").value.toLowerCase();
+    var region = document.getElementById("f-region").value, layer = document.getElementById("f-layer").value, stage = document.getElementById("f-stage").value;
+    rows.forEach(function (r) {
+      var ok = (!region || r.dataset.region === region) && (!layer || r.dataset.layer === layer) && (!stage || r.dataset.stage === stage) && (!q || r.dataset.text.indexOf(q) >= 0);
+      r.style.display = ok ? "" : "none";
+    });
+  }
+  ids.forEach(function (id) { document.getElementById(id).addEventListener("input", apply); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Sample Tech News</title>
+    <item>
+      <title>Acme AI raises $20M Series A led by Example Ventures</title>
+      <link>https://news.example/acme-raises?utm_source=rss&amp;utm_medium=feed#comments</link>
+      <pubDate>Thu, 08 Oct 2026 04:00:00 GMT</pubDate>
+      <description>&lt;p&gt;Acme AI, a startup building &lt;b&gt;agents&lt;/b&gt;, closed a round.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Older story still inside the window</title>
+      <link>https://news.example/older-in-window</link>
+      <pubDate>Wed, 07 Oct 2026 04:00:00 GMT</pubDate>
+      <description>Thirty hours old.</description>
+    </item>
+    <item>
+      <title>Story outside the window</title>
+      <link>https://news.example/too-old</link>
+      <pubDate>Mon, 05 Oct 2026 04:00:00 GMT</pubDate>
+      <description>Too old.</description>
+    </item>
+    <item>
+      <title>Story with no date</title>
+      <link>https://news.example/undated</link>
+      <description>No date here.</description>
+    </item>
+    <item>
+      <title>Story dated in the future</title>
+      <link>https://news.example/future</link>
+      <pubDate>Sat, 10 Oct 2026 04:00:00 GMT</pubDate>
+      <description>Impossible date.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://news.example/no-title</link>
+      <pubDate>Thu, 08 Oct 2026 04:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

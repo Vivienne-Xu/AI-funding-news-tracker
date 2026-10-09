@@ -1,0 +1,99 @@
+# The only allowed regions (closed list). Colours are from the design system.
+regions:
+  - {code: US,     label: United States,  colour: "#0B1F33"}
+  - {code: Europe, label: Europe,         colour: "#1F8A8A"}
+  - {code: Asia,   label: Asia,           colour: "#C9A227"}
+  - {code: RoW,    label: Rest of world,  colour: "#A7B0BC"}
+
+# Which region a headquarters country belongs to. Matching ignores upper/lower case.
+# If a deal states no country, or a country that is not listed here, the region of the news source is used.
+countries:
+  US: [US, U.S., USA, U.S.A., United States, United States of America, America]
+  Europe:
+    - UK
+    - U.K.
+    - United Kingdom
+    - England
+    - Scotland
+    - Wales
+    - Northern Ireland
+    - Ireland
+    - France
+    - Germany
+    - Italy
+    - Spain
+    - Portugal
+    - Netherlands
+    - Belgium
+    - Luxembourg
+    - Switzerland
+    - Austria
+    - Sweden
+    - Norway
+    - Denmark
+    - Finland
+    - Iceland
+    - Poland
+    - Czech Republic
+    - Czechia
+    - Slovakia
+    - Hungary
+    - Romania
+    - Bulgaria
+    - Greece
+    - Croatia
+    - Slovenia
+    - Serbia
+    - Estonia
+    - Latvia
+    - Lithuania
+    - Ukraine
+    - Cyprus
+    - Malta
+    - Turkey
+  RoW:
+    - Canada
+    - Mexico
+    - Brazil
+    - Argentina
+    - Chile
+    - Colombia
+    - Peru
+    - Israel
+    - Saudi Arabia
+    - KSA
+    - UAE
+    - United Arab Emirates
+    - Qatar
+    - Kuwait
+    - Bahrain
+    - Oman
+    - Jordan
+    - Egypt
+    - Morocco
+    - Nigeria
+    - Kenya
+    - South Africa
+    - Ghana
+    - Australia
+    - New Zealand
+  Asia:
+    - India
+    - China
+    - Hong Kong
+    - Taiwan
+    - Japan
+    - South Korea
+    - Korea
+    - Singapore
+    - Indonesia
+    - Malaysia
+    - Thailand
+    - Vietnam
+    - Philippines
+    - Pakistan
+    - Bangladesh
+    - Sri Lanka
+    - Nepal
+    - Cambodia
+    - Myanmar

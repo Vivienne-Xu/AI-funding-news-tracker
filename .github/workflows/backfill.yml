@@ -1,0 +1,63 @@
+name: Backfill (manual only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      from_date:
+        description: "Read articles published from this date (YYYY-MM-DD). Feeds only list recent articles."
+        required: true
+      preview_only:
+        description: "Only show the estimated cost, read nothing"
+        type: boolean
+        default: true
+      approve_over_5_usd:
+        description: "Approve an estimated cost above $5"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash             # a failure anywhere in a piped command fails the step
+
+concurrency:
+  group: data-branch
+  cancel-in-progress: false
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+  EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --frozen
+      - name: Load saved data
+        id: restore
+        run: bash scripts/ci_restore_data.sh
+      - name: Backfill
+        env:
+          FROM_DATE: ${{ inputs.from_date }}
+          PREVIEW_ONLY: ${{ inputs.preview_only }}
+          APPROVE: ${{ inputs.approve_over_5_usd }}
+        run: |
+          mkdir -p out
+          args=(--from "$FROM_DATE")
+          [ "$PREVIEW_ONLY" = "true" ] && args+=(--dry-run)
+          [ "$APPROVE" = "true" ] && args+=(--yes)
+          uv run app backfill "${args[@]}" 2>&1 | tee out/run.log
+      - name: Save data
+        if: always() && steps.restore.outcome == 'success'
+        run: bash scripts/ci_save_data.sh
+      - name: Email a failure notice
+        if: failure()
+        run: uv run app alert --job backfill --link "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --log out/run.log

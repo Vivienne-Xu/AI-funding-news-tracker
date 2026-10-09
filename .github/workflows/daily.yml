@@ -1,0 +1,66 @@
+name: Daily briefing
+
+on:
+  schedule:
+    # GitHub's clock is UTC, the UK switches between UTC+0 (winter) and UTC+1 (summer).
+    # So the job is started at both 06:40 and 07:40 UTC; the first step lets through only the UK-morning one.
+    # Aim: the email arrives around 08:00 UK time (GitHub may start a run 10-30 minutes late).
+    - cron: "40 6 * * *"
+    - cron: "40 7 * * *"
+  workflow_dispatch: {}     # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write           # needed to save the database on the `data` branch
+
+defaults:
+  run:
+    shell: bash             # a failure anywhere in a piped command fails the step
+
+concurrency:
+  group: data-branch        # daily, monthly and backfill runs take turns; two never save at once
+  cancel-in-progress: false
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+  EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Is it morning in the UK?
+        id: gate
+        run: |
+          hour=$(TZ=Europe/London date +%-H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$hour" -ge 7 ] && [ "$hour" -le 9 ]; }; then
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=false" >> "$GITHUB_OUTPUT"
+            echo "UK time is ${hour}:xx, outside the morning window. The other scheduled start covers today."
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'true'
+      - uses: astral-sh/setup-uv@v5
+        if: steps.gate.outputs.go == 'true'
+      - name: Install
+        if: steps.gate.outputs.go == 'true'
+        run: uv sync --frozen
+      - name: Load saved data
+        id: restore
+        if: steps.gate.outputs.go == 'true'
+        run: bash scripts/ci_restore_data.sh
+      - name: Run the daily briefing
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          mkdir -p out
+          uv run app daily 2>&1 | tee out/run.log
+      - name: Save data
+        if: always() && steps.gate.outputs.go == 'true' && steps.restore.outcome == 'success'
+        run: bash scripts/ci_save_data.sh
+      - name: Email a failure notice
+        if: failure()
+        run: uv run app alert --job daily --link "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --log out/run.log

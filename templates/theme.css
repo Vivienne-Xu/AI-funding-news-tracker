@@ -1,0 +1,45 @@
+/* Shared design system (brief Section 10): editorial research publication, light, one accent colour.
+   Colours: ink #0B1F33, body #3A4655, muted #7A8594, rules #DDE2E8, panels #F4F6F8, accent cobalt #1F5BD6.
+   Used by the daily email and (together with monthly.css) by the monthly report and email. */
+
+.page { margin: 0; padding: 0; background: #FFFFFF; }
+.col { width: 600px; max-width: 100%; background: #FFFFFF; }
+
+.topbar { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #7A8594; padding: 16px 0 10px 0; }
+.masthead { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 36px; line-height: 40px; font-weight: 500; color: #0B1F33; padding: 0 0 10px 0; }
+.accent { color: #1F5BD6; }
+.issue { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; font-weight: 400; color: #7A8594; }
+.rule { border-top: 3px solid #0B1F33; font-size: 0; line-height: 0; height: 0; }
+
+.summary { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 20px; line-height: 28px; font-weight: 400; color: #0B1F33; padding: 20px 0 18px 0; }
+.note { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 22px; color: #3A4655; padding: 8px 0 18px 0; }
+
+.snap-label { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 11px; line-height: 16px; letter-spacing: 1px; text-transform: uppercase; color: #7A8594; padding: 14px 16px 0 16px; background: #F4F6F8; }
+.snap-value { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 28px; line-height: 34px; font-weight: 500; color: #0B1F33; padding: 0 16px 8px 16px; background: #F4F6F8; }
+.snap-bar { padding: 0 16px 6px 16px; background: #F4F6F8; font-size: 0; line-height: 0; }
+.bar-cell { height: 8px; font-size: 0; line-height: 0; }
+.snap-legend { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #3A4655; padding: 4px 16px 14px 16px; background: #F4F6F8; }
+
+.section-title { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 11px; line-height: 16px; letter-spacing: 1px; text-transform: uppercase; color: #7A8594; padding: 30px 0 8px 0; border-bottom: 1px solid #DDE2E8; }
+
+.deal { padding: 18px 0 18px 0; border-bottom: 1px solid #DDE2E8; }
+.numeral { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 48px; line-height: 48px; font-weight: 400; color: #DDE2E8; width: 52px; }
+.company { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 22px; line-height: 28px; font-weight: 500; color: #0B1F33; }
+.tag { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; color: #7A8594; }
+.amount { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 17px; line-height: 24px; font-weight: 500; color: #0B1F33; padding: 2px 0 8px 0; }
+.text { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 21px; font-weight: 400; color: #3A4655; padding: 0 0 6px 0; }
+.lead-in { font-weight: 500; color: #0B1F33; }
+.small { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; font-weight: 400; color: #7A8594; padding: 4px 0 0 0; }
+a { color: #1F5BD6; text-decoration: none; }
+
+.row { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; color: #3A4655; padding: 9px 0 9px 0; border-bottom: 1px solid #DDE2E8; }
+.row-amount { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px; font-weight: 500; color: #0B1F33; text-align: right; padding: 9px 0 9px 0; border-bottom: 1px solid #DDE2E8; white-space: nowrap; }
+.row-name { font-weight: 500; color: #0B1F33; }
+.more { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 12px; line-height: 18px; color: #7A8594; padding: 10px 0 0 0; }
+
+.headwinds { background: #F4F6F8; border-left: 3px solid #B3261E; padding: 14px 16px 14px 16px; font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 21px; color: #3A4655; }
+.event-type { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #B3261E; }
+
+.mtd { background: #F4F6F8; padding: 14px 16px 14px 16px; font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 21px; color: #0B1F33; }
+
+.footer { font-family: Inter, Arial, Helvetica, sans-serif; font-size: 11px; line-height: 17px; color: #7A8594; padding: 28px 0 30px 0; border-top: 1px solid #DDE2E8; }

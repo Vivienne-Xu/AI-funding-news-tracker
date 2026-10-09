@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ d.subject }}</title>
+<style>{{ css }}</style>
+</head>
+<body class="page">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="page"><tr><td align="center" class="page">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" class="col">
+
+<tr><td class="topbar">{{ d.date_text }} &middot; {{ d.read_time }}</td></tr>
+<tr><td class="masthead">AI Funding <span class="accent">Daily</span><br><span class="issue">Issue {{ d.issue }}</span></td></tr>
+<tr><td class="rule">&nbsp;</td></tr>
+
+{% if d.quiet %}
+<tr><td class="note">No new AI funding deals were found today.<br>
+{{ d.sources_ok }} of {{ d.sources_total }} sources were checked.<br>
+{% if d.review_total %}{{ d.review_total }} item{{ '' if d.review_total == 1 else 's' }} need review (listed below).{% else %}Nothing is waiting for review.{% endif %}</td></tr>
+{% else %}
+
+{% if d.summary %}
+<tr><td class="summary">{{ d.summary }}</td></tr>
+
+<tr><td>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td class="snap-label" width="50%">Raised today</td>
+<td class="snap-label" width="50%">Deals</td>
+</tr>
+<tr>
+<td class="snap-value">{{ d.total_text }}</td>
+<td class="snap-value">{{ d.deal_count }}</td>
+</tr>
+<tr><td colspan="2" class="snap-bar">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+{% for r in d.regions if r.percent > 0 %}
+<td class="bar-cell" width="{{ r.percent }}%" bgcolor="{{ colour(r.name) }}" style="background-color: {{ colour(r.name) }};">&nbsp;</td>
+{% endfor %}
+</tr></table>
+</td></tr>
+<tr><td colspan="2" class="snap-legend">
+{% for r in d.regions if r.count %}<span style="color: {{ colour(r.name) }};">&#9679;</span> {{ r.name }} {{ r.amount_text }} ({{ r.count }}){% if not loop.last %} &nbsp; {% endif %}{% endfor %}
+</td></tr>
+</table>
+</td></tr>
+
+<tr><td class="section-title">The big {{ 'three' if d.top|length == 3 else d.top|length }}</td></tr>
+{% for deal in d.top %}
+<tr><td class="deal">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td class="numeral" width="52" valign="top">{{ loop.index }}</td>
+<td valign="top">
+<div class="company">{{ deal.company }} <span style="color: {{ colour(deal.region) }};">&#9679;</span> <span class="tag">{{ deal.region }}</span></div>
+<div class="amount">{{ deal.amount_text }}{% if deal.round_label %} &middot; {{ deal.round_label }}{% endif %}{% if deal.valuation_text %} &middot; {{ deal.valuation_text }}{% endif %}</div>
+{% if deal.description %}<div class="text"><span class="lead-in">What they're building:</span> {{ deal.description }}</div>{% endif %}
+{% if deal.why %}<div class="text"><span class="lead-in">Why it matters:</span> {{ deal.why }}</div>{% endif %}
+<div class="small">{% if deal.investors %}{{ deal.investors }} &middot; {% endif %}{% for name, url in deal.sources %}<a href="{{ url }}">{{ name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</div>
+</td>
+</tr></table>
+</td></tr>
+{% endfor %}
+
+{% if d.also %}
+<tr><td class="section-title">Also announced</td></tr>
+{% for deal in d.also %}
+<tr><td>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td class="row"><span style="color: {{ colour(deal.region) }};">&#9679;</span> <span class="row-name">{{ deal.company }}</span>{% if deal.round_label %} &middot; {{ deal.round_label }}{% endif %}</td>
+<td class="row-amount">{{ deal.amount_text }}</td>
+</tr></table>
+</td></tr>
+{% endfor %}
+{% if d.more_count %}<tr><td class="more">+ {{ d.more_count }} more tracked today</td></tr>{% endif %}
+{% endif %}
+{% endif %}
+
+{% if d.events %}
+<tr><td class="section-title">Headwinds</td></tr>
+<tr><td style="padding-top: 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="headwinds">
+{% for e in d.events %}
+<div{% if not loop.last %} style="padding-bottom: 12px;"{% endif %}><span class="event-type">{{ e.label }}</span> &middot; <span class="row-name">{{ e.company }}</span><br>
+{{ e.summary }}{% if e.prior_funding %} {{ e.prior_funding }}.{% endif %}<br>
+<span class="small">{% for name, url in e.sources %}<a href="{{ url }}">{{ name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span></div>
+{% endfor %}
+</td></tr></table>
+</td></tr>
+{% endif %}
+{% endif %}
+
+{% if d.month_to_date and not d.quiet %}
+<tr><td style="padding-top: 28px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="mtd">{{ d.month_to_date }}</td></tr></table></td></tr>
+{% endif %}
+
+<tr><td class="footer">
+<b>About this briefing.</b> Deals come from public AI and startup news feeds ({{ d.sources_ok }} of {{ d.sources_total }} working today{% if d.failed_sources %}; not working: {{ d.failed_sources|join(', ') }}{% endif %}).
+Amounts are shown in the currency of the article, with an approximate US dollar value (~) at fixed rates.
+"Why it matters" lines compare with the deals this tool has tracked, not the whole market.
+Coverage is limited to what the sources publish, so this is not a complete list of every deal.<br><br>
+{% if d.review_total %}<b>Held back for checking.</b> {{ d.review_total }} item{{ '' if d.review_total == 1 else 's' }} could not be fully confirmed from the article text, so {{ 'it was' if d.review_total == 1 else 'they were' }} kept out of the sections above. Worth a manual look if relevant:<br>
+{% for item in d.review %}&nbsp;&middot; {{ item }}<br>{% endfor %}
+{% if d.review_total > d.review|length %}&nbsp;&middot; and {{ d.review_total - d.review|length }} more<br>{% endif %}
+{% else %}<b>Held back for checking.</b> Nothing today: every item passed the checks.<br>{% endif %}<br>
+AI cost for this briefing: {{ d.cost_text }} (paid-plan estimate).
+</td></tr>
+
+</table>
+</td></tr></table>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Closed list of categories, each belonging to one of the five stack layers
+# (brief, Section 9.2). Names of categories are a first draft: please review.
+layers:
+  - Models
+  - Infrastructure
+  - Tooling
+  - Applications
+  - Physical AI
+
+categories:
+  - {code: frontier_labs,  label: Frontier labs,           layer: Models}
+  - {code: infra_compute,  label: Infrastructure & compute, layer: Infrastructure}
+  - {code: software_dev,   label: Software development,    layer: Tooling}
+  - {code: agent_infra,    label: Agent infrastructure,    layer: Tooling}
+  - {code: enterprise,     label: Enterprise applications, layer: Applications}
+  - {code: vertical,       label: Vertical applications,   layer: Applications}
+  - {code: robotics,       label: Robotics,                layer: Physical AI}

@@ -1,0 +1,58 @@
+/* ---------- Monthly report (HTML, PDF and email cover). Classes start with m- ---------- */
+.m-body { margin: 0; background: #FFFFFF; color: #3A4655; font-family: Inter, Arial, Helvetica, sans-serif; font-size: 14px; line-height: 22px; }
+.m-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px 24px; }
+.m-cover { background: #0B1F33; color: #FFFFFF; padding: 40px 40px 32px 40px; margin: 0 -24px 0 -24px; }
+.m-issue { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #A7B0BC; }
+.m-title { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 22px; font-weight: 500; margin: 6px 0 24px 0; color: #FFFFFF; }
+.m-cover-grid { display: flex; gap: 40px; align-items: flex-start; }
+.m-hero { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 64px; line-height: 68px; font-weight: 500; color: #FFFFFF; }
+.m-hero-label { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #A7B0BC; margin-bottom: 4px; }
+.m-delta { display: inline-block; margin-top: 10px; padding: 2px 10px; background: #FFFFFF; font-size: 13px; font-weight: 500; }
+.m-up { color: #1E7F4F; }
+.m-down { color: #B3261E; }
+.m-insight { border-left: 3px solid #1F5BD6; padding-left: 18px; font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 22px; line-height: 30px; color: #FFFFFF; flex: 1; }
+.m-kpis { display: flex; gap: 0; margin-top: 32px; border-top: 1px solid #3A4655; }
+.m-kpi { flex: 1; padding: 16px 12px 0 0; }
+.m-kpi-value { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 28px; font-weight: 500; color: #FFFFFF; }
+.m-kpi-label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #A7B0BC; }
+.m-takeaways { margin: 28px 0 0 0; padding: 0; list-style: none; }
+.m-takeaways li { padding: 10px 0 10px 0; border-bottom: 1px solid #DDE2E8; font-size: 15px; color: #0B1F33; }
+.m-section { margin-top: 48px; border-top: 1px solid #DDE2E8; padding-top: 18px; }
+.m-section-no { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #7A8594; }
+.m-section h2 { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 26px; line-height: 32px; font-weight: 500; color: #0B1F33; margin: 4px 0 8px 0; }
+.m-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; margin-top: 16px; }
+.m-chart { position: relative; height: 300px; }
+.m-chart-tall { height: 360px; }
+.m-note { color: #3A4655; margin: 0 0 8px 0; }
+.m-fine { font-size: 12px; color: #7A8594; margin: 8px 0 0 0; }
+.m-legend { margin-top: 8px; font-size: 12px; color: #3A4655; }
+.m-key { margin-right: 16px; white-space: nowrap; }
+.m-key i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 2px; }
+.m-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.m-card { background: #F4F6F8; padding: 14px 16px; }
+.m-card b { font-weight: 500; color: #0B1F33; }
+.m-card-value { font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 24px; color: #0B1F33; }
+.m-bars { margin-top: 8px; }
+.m-bar-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; font-size: 13px; }
+.m-bar-name { width: 150px; color: #0B1F33; }
+.m-bar-track { flex: 1; height: 8px; background: #F4F6F8; border-radius: 3px; }
+.m-bar-fill { height: 8px; background: #0B1F33; border-radius: 3px; }
+.m-bar-val { width: 90px; text-align: right; font-variant-numeric: tabular-nums; }
+.m-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.m-table th { text-align: left; font-weight: 500; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #7A8594; padding: 8px 8px 8px 0; border-bottom: 1px solid #DDE2E8; }
+.m-table td { padding: 8px 8px 8px 0; border-bottom: 1px solid #DDE2E8; vertical-align: top; }
+.m-table .num { text-align: right; padding-right: 0; padding-left: 12px; }
+.m-dot { display: inline-block; width: 8px; height: 8px; border-radius: 4px; margin-right: 6px; }
+.m-headwinds { border-left: 3px solid #B3261E; padding-left: 18px; }
+.m-filters { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.m-filters select, .m-filters input { font: inherit; padding: 6px 8px; border: 1px solid #DDE2E8; background: #FFFFFF; color: #0B1F33; }
+.m-footer { margin-top: 48px; border-top: 1px solid #DDE2E8; padding-top: 16px; font-size: 12px; line-height: 18px; color: #7A8594; }
+.m-banner { background: #F4F6F8; padding: 10px 14px; font-size: 13px; margin-top: 16px; }
+@media (max-width: 800px) { .m-grid, .m-cards { grid-template-columns: 1fr; } .m-cover-grid { flex-direction: column; } .m-kpis { flex-wrap: wrap; } .m-hero { font-size: 48px; } }
+@media print {
+  .no-print { display: none !important; }
+  .m-cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .m-section { break-inside: avoid; }
+  .m-bar-fill, .m-key i, .m-dot, .m-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+.m-table .m-desc { width: 34%; color: #3A4655; }

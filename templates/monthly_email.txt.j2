@@ -1,0 +1,26 @@
+AI FUNDING MONTHLY | {{ i.month_label }} | Issue {{ issue }}
+
+Total raised: {{ i.total_usd|usd }} ({{ i.deal_count }} deals){% if i.mom_change_pct is not none %}, {{ '+' if i.mom_change_pct >= 0 else '-' }}{{ i.mom_change_pct|abs }}% vs {{ prev_label }}{% endif %}
+
+{{ n.headline }}
+
+{% for value, label in kpis %}{{ label }}: {{ value }}
+{% endfor %}
+
+TAKEAWAYS
+{% for t in n.takeaways %}- {{ t }}
+{% endfor %}
+
+FIVE LARGEST ROUNDS
+{% for d in i.largest_rounds[:5] %}- {{ d.company }} ({{ d.round }}, {{ d.region }}): {{ d.usd|usd }}
+{% else %}No rounds with a disclosed amount this month.
+{% endfor %}
+{% if i.headwinds %}
+HEADWINDS: {{ i.headwinds|length }} confirmed event(s). Details are in the full report.
+{% endif %}
+
+--
+{% if has_pdf %}The full report is attached as a PDF.{% else %}The PDF and charts could not be created this month ({{ asset_note }}).{% endif %}
+
+Commentary: {{ narrative_note }}.
+AI cost for this report: {{ cost_text }} (paid-plan estimate).

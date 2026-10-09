@@ -1,0 +1,25 @@
+# Fixed, approximate exchange rates: how many US dollars one unit of each currency is worth.
+#
+# How they are used: each deal keeps the amount in the currency the source published (shown as such in the
+# briefing). These rates only produce the US-dollar figure used for totals, rankings and charts. No live rates
+# are fetched. If an article states its own US-dollar equivalent (for example "EUR 22 million ($25 million)"),
+# that figure is used instead, and the deal is marked as such in its evidence.
+# The numbers are rough values written from memory and have not been checked against a market source. Edit them
+# whenever you like; a few percent of error does not change rankings or totals in any meaningful way.
+as_of: "approximate, not verified"
+rates:
+  USD: 1.0
+  EUR: 1.15
+  GBP: 1.30
+  CHF: 1.20
+  SEK: 0.10
+  NOK: 0.095
+  DKK: 0.155
+  CAD: 0.72
+  AUD: 0.65
+  SGD: 0.77
+  INR: 0.0113
+  JPY: 0.0067
+  CNY: 0.14
+  AED: 0.272
+  ILS: 0.29

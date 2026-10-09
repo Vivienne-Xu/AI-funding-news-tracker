@@ -1,0 +1,4 @@
+# Maps alternative company names to one standard name (used when merging deals).
+# Example:
+#   "Open AI": "OpenAI"
+aliases: {}

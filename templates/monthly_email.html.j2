@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ subject }}</title>
+<style>{{ css }}</style>
+</head>
+<body class="page">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="page"><tr><td align="center" class="page">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" class="col">
+
+<tr><td class="topbar">{{ i.month_label }} &middot; Full report {% if has_pdf %}attached as PDF{% else %}not attached (see note below){% endif %}</td></tr>
+<tr><td class="masthead">AI Funding <span class="accent">Monthly</span><br><span class="issue">Issue {{ issue }}</span></td></tr>
+<tr><td class="rule">&nbsp;</td></tr>
+
+<tr><td bgcolor="#0B1F33" style="background-color: #0B1F33; padding: 28px 28px 8px 28px;">
+  <div style="font-family: Arial, Helvetica, sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #A7B0BC;">Total raised in {{ i.month_label }}</div>
+  <div style="font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 56px; line-height: 62px; color: #FFFFFF;">{{ i.total_usd|usd }}</div>
+  {% if i.mom_change_pct is not none %}
+  <div style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #FFFFFF; padding-top: 4px;"><span style="background-color: #FFFFFF; padding: 2px 8px; color: {{ '#1E7F4F' if i.mom_change_pct >= 0 else '#B3261E' }};">{{ '▲' if i.mom_change_pct >= 0 else '▼' }} {{ i.mom_change_pct|abs }}% vs {{ prev_label }}</span></div>
+  {% endif %}
+  <div style="font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 20px; line-height: 28px; color: #FFFFFF; border-left: 3px solid #1F5BD6; padding-left: 14px; margin-top: 20px;">{{ n.headline }}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 22px;"><tr>
+    {% for value, label in kpis %}
+    <td width="25%" valign="top" style="border-top: 1px solid #3A4655; padding: 12px 6px 18px 0;">
+      <div style="font-family: Newsreader, Georgia, 'Times New Roman', serif; font-size: 22px; color: #FFFFFF;">{{ value }}</div>
+      <div style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #A7B0BC;">{{ label }}</div>
+    </td>
+    {% endfor %}
+  </tr></table>
+</td></tr>
+
+<tr><td class="section-title">Takeaways</td></tr>
+{% for t in n.takeaways %}
+<tr><td class="row" style="color: #0B1F33;">{{ t }}</td></tr>
+{% endfor %}
+
+{% for key, title in charts %}
+<tr><td class="section-title">{{ title }}</td></tr>
+<tr><td style="padding-top: 10px;">
+  <div class="text"><span class="lead-in">{{ n.section_headlines[key] }}</span></div>
+  <img src="cid:chart_{{ key }}" width="600" alt="{{ title }}" style="display: block; width: 100%; max-width: 600px; height: auto;">
+</td></tr>
+{% endfor %}
+{% if not charts %}
+<tr><td class="note">Charts could not be created this month ({{ asset_note }}). The numbers above and below are unaffected.</td></tr>
+{% endif %}
+
+<tr><td class="section-title">Five largest rounds</td></tr>
+{% for d in i.largest_rounds[:5] %}
+<tr><td>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+<td class="row"><span style="color: {{ colour(d.region) }};">&#9679;</span> <span class="row-name">{{ d.company }}</span> &middot; {{ d.round }}</td>
+<td class="row-amount">{{ d.usd|usd }}</td>
+</tr></table>
+</td></tr>
+{% else %}
+<tr><td class="note">No rounds with a disclosed amount this month.</td></tr>
+{% endfor %}
+
+{% if i.headwinds %}
+<tr><td style="padding-top: 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="headwinds">
+  <span class="event-type">Headwinds</span> &middot; {{ i.headwinds|length }} confirmed event{{ '' if i.headwinds|length == 1 else 's' }} this month. Details are in the full report.
+</td></tr></table></td></tr>
+{% endif %}
+
+<tr><td class="footer">
+{% if has_pdf %}The full report (interactive HTML in the repository, PDF attached) has every section and the complete deal table.{% endif %}<br>
+Commentary: {{ narrative_note }}.<br>
+AI cost for this report: {{ cost_text }} (paid-plan estimate).
+</td></tr>
+
+</table>
+</td></tr></table>
+</body>
+</html>

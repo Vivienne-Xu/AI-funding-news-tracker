@@ -1,0 +1,25 @@
+# Investor tiers used by ranking. Matching ignores upper/lower case and looks for the whole name
+# inside the investor's name (so "Sequoia" matches "Sequoia Capital").
+# tier_1 starts as the venture firms listed in your brief (Section 7, VC announcement pages).
+# Edit freely: add or remove names. tier_2 is empty, for you to fill in.
+tier_1:
+  - a16z
+  - Andreessen Horowitz
+  - Sequoia
+  - Lightspeed
+  - Accel
+  - Index Ventures
+  - Greylock
+  - General Catalyst
+  - Kleiner Perkins
+  - Founders Fund
+  - Benchmark
+  - Bessemer
+  - Insight Partners
+  - Khosla
+  - Thrive Capital
+  - Redpoint
+  - Felicis
+  - Conviction
+  - Y Combinator
+tier_2: []
